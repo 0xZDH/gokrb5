@@ -5,9 +5,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jcmturner/gokrb5/v8/iana"
-	"github.com/jcmturner/gokrb5/v8/iana/msgtype"
-	"github.com/jcmturner/gokrb5/v8/test/testdata"
+	"github.com/0xZDH/gokrb5/v8/iana"
+	"github.com/0xZDH/gokrb5/v8/iana/msgtype"
+	"github.com/0xZDH/gokrb5/v8/test/testdata"
 	"github.com/stretchr/testify/assert"
 )
 

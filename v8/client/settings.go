@@ -11,6 +11,7 @@ type Settings struct {
 	disablePAFXFast         bool
 	assumePreAuthentication bool
 	preAuthEType            int32
+	socksAddr               string
 	logger                  *log.Logger
 }
 
@@ -55,6 +56,20 @@ func AssumePreAuthentication(b bool) func(*Settings) {
 // AssumePreAuthentication indicates if the client should proactively assume using pre-authentication.
 func (s *Settings) AssumePreAuthentication() bool {
 	return s.assumePreAuthentication
+}
+
+// SocksAddr used to configure the client to use SOCKS5 proxy.
+//
+// s := NewSettings(SocksAddr("127.0.0.1:1080"))
+func SocksAddr(a string) func(*Settings) {
+	return func(s *Settings) {
+		s.socksAddr = a
+	}
+}
+
+// SocksAddr indicates is the client should use SOCKS5 proxy.
+func (s *Settings) SocksAddr() string {
+	return s.socksAddr
 }
 
 // Logger used to configure client with a logger.

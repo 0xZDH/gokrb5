@@ -42,8 +42,8 @@ jobs:
 
       - name: Copy to gopkg.in in GOPATH
         run: |
-          mkdir -p /home/runner/go/src/gopkg.in/jcmturner/gokrb5.v7
-          cp -r $GITHUB_WORKSPACE/*  /home/runner/go/src/gopkg.in/jcmturner/gokrb5.v7
+          mkdir -p /home/runner/go/src/github.com/0xZDH/gokrb5
+          cp -r $GITHUB_WORKSPACE/*  /home/runner/go/src/github.com/0xZDH/gokrb5
         id: gopkg
 
       - name: Get dependencies
@@ -53,7 +53,7 @@ jobs:
 
       - name: Unit tests
         run: |
-          cd /home/runner/go/src/gopkg.in/jcmturner/gokrb5.v7
+          cd /home/runner/go/src/github.com/0xZDH/gokrb5
           go test -race $(go list ./... | grep -E -v '/v[0-9]+' | grep -v /vendor/)
         id: unitTests
 
@@ -78,7 +78,7 @@ jobs:
 
       - name: Tests including integration tests
         run: |
-          cd /home/runner/go/src/gopkg.in/jcmturner/gokrb5.v7
+          cd /home/runner/go/src/github.com/0xZDH/gokrb5
           go test -race $(go list ./... | grep -E -v '/v[0-9]+' | grep -v /vendor/)
         env:
           INTEGRATION: 1
@@ -87,7 +87,7 @@ jobs:
 
       - name: Tests (32bit)
         run: |
-          cd /home/runner/go/src/gopkg.in/jcmturner/gokrb5.v7
+          cd /home/runner/go/src/github.com/0xZDH/gokrb5
           go test $(go list ./... | grep -E -v '/v[0-9]+' | grep -v /vendor/)
         env:
           GOARCH: 386

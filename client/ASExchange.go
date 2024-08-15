@@ -1,14 +1,14 @@
 package client
 
 import (
-	"gopkg.in/jcmturner/gokrb5.v7/crypto"
-	"gopkg.in/jcmturner/gokrb5.v7/crypto/etype"
-	"gopkg.in/jcmturner/gokrb5.v7/iana/errorcode"
-	"gopkg.in/jcmturner/gokrb5.v7/iana/keyusage"
-	"gopkg.in/jcmturner/gokrb5.v7/iana/patype"
-	"gopkg.in/jcmturner/gokrb5.v7/krberror"
-	"gopkg.in/jcmturner/gokrb5.v7/messages"
-	"gopkg.in/jcmturner/gokrb5.v7/types"
+	"github.com/0xZDH/gokrb5/crypto"
+	"github.com/0xZDH/gokrb5/crypto/etype"
+	"github.com/0xZDH/gokrb5/iana/errorcode"
+	"github.com/0xZDH/gokrb5/iana/keyusage"
+	"github.com/0xZDH/gokrb5/iana/patype"
+	"github.com/0xZDH/gokrb5/krberror"
+	"github.com/0xZDH/gokrb5/messages"
+	"github.com/0xZDH/gokrb5/types"
 )
 
 // ASExchange performs an AS exchange for the client to retrieve a TGT.
@@ -29,7 +29,7 @@ func (cl *Client) ASExchange(realm string, ASReq messages.ASReq, referral int) (
 	}
 	var ASRep messages.ASRep
 
-	rb, err := cl.sendToKDC(b, realm)
+	rb, err := cl.SendToKDC(b, realm)
 	if err != nil {
 		if e, ok := err.(messages.KRBError); ok {
 			switch e.ErrorCode {
@@ -44,7 +44,7 @@ func (cl *Client) ASExchange(realm string, ASReq messages.ASReq, referral int) (
 				if err != nil {
 					return messages.ASRep{}, krberror.Errorf(err, krberror.EncodingError, "AS Exchange Error: failed marshaling AS_REQ with PAData")
 				}
-				rb, err = cl.sendToKDC(b, realm)
+				rb, err = cl.SendToKDC(b, realm)
 				if err != nil {
 					if _, ok := err.(messages.KRBError); ok {
 						return messages.ASRep{}, krberror.Errorf(err, krberror.KDCError, "AS Exchange Error: kerberos error response from KDC")

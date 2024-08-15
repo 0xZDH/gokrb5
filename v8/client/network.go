@@ -7,14 +7,26 @@ import (
 	"net"
 	"strings"
 	"time"
+	"golang.org/x/net/proxy"
 
-	"github.com/jcmturner/gokrb5/v8/iana/errorcode"
-	"github.com/jcmturner/gokrb5/v8/messages"
+	"github.com/0xZDH/gokrb5/v8/iana/errorcode"
+	"github.com/0xZDH/gokrb5/v8/messages"
 )
+
+// Export SendToKDC
+func (cl *Client) SendToKDC(b []byte, realm string) ([]byte, error) {
+	return cl.sendToKDC(b, realm)
+}
 
 // SendToKDC performs network actions to send data to the KDC.
 func (cl *Client) sendToKDC(b []byte, realm string) ([]byte, error) {
 	var rb []byte
+
+	// Force TCP connection when using a SOCKS proxy
+	if cl.settings.SocksAddr() != "" {
+		cl.Config.LibDefaults.UDPPreferenceLimit = 1
+	}
+
 	if cl.Config.LibDefaults.UDPPreferenceLimit == 1 {
 		//1 means we should always use TCP
 		rb, errtcp := cl.sendKDCTCP(realm, b)
@@ -132,7 +144,7 @@ func (cl *Client) sendKDCTCP(realm string, b []byte) ([]byte, error) {
 	if err != nil {
 		return r, err
 	}
-	r, err = dialSendTCP(kdcs, b)
+	r, err = dialSendTCP(kdcs, b, cl.settings.SocksAddr())
 	if err != nil {
 		return r, err
 	}
@@ -140,14 +152,30 @@ func (cl *Client) sendKDCTCP(realm string, b []byte) ([]byte, error) {
 }
 
 // dialKDCTCP establishes a TCP connection to a KDC.
-func dialSendTCP(kdcs map[int]string, b []byte) ([]byte, error) {
+func dialSendTCP(kdcs map[int]string, b []byte, socksAddr string) ([]byte, error) {
 	var errs []string
 	for i := 1; i <= len(kdcs); i++ {
-		conn, err := net.DialTimeout("tcp", kdcs[i], 5*time.Second)
-		if err != nil {
-			errs = append(errs, fmt.Sprintf("error establishing connection to %s: %v", kdcs[i], err))
-			continue
+		var conn net.Conn
+
+		if socksAddr != "" {
+			dial, err := proxy.SOCKS5("tcp", socksAddr, nil, &net.Dialer{Timeout: 5 * time.Second})
+			if err != nil {
+				return nil, errors.New("error establishing SOCKS5 proxy")
+			}
+
+			conn, err = dial.Dial("tcp", kdcs[i])
+			if err != nil {
+				errs = append(errs, fmt.Sprintf("error dialing through SOCKS5 proxy to %s: %v", kdcs[i], err))
+				continue
+			}
+		} else {
+			conn, err = net.DialTimeout("tcp", kdcs[i], 5*time.Second)
+			if err != nil {
+				errs = append(errs, fmt.Sprintf("error setting dial timeout on connection to %s: %v", kdcs[i], err))
+				continue
+			}
 		}
+
 		if err := conn.SetDeadline(time.Now().Add(5 * time.Second)); err != nil {
 			errs = append(errs, fmt.Sprintf("error setting deadline on connection to %s: %v", kdcs[i], err))
 			continue

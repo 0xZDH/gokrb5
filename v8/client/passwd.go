@@ -3,8 +3,8 @@ package client
 import (
 	"fmt"
 
-	"github.com/jcmturner/gokrb5/v8/kadmin"
-	"github.com/jcmturner/gokrb5/v8/messages"
+	"github.com/0xZDH/gokrb5/v8/kadmin"
+	"github.com/0xZDH/gokrb5/v8/messages"
 )
 
 // Kpasswd server response codes.
@@ -65,7 +65,7 @@ func (cl *Client) sendToKPasswd(msg kadmin.Request) (r kadmin.Reply, err error) 
 			return
 		}
 	} else {
-		rb, err = dialSendTCP(kps, b)
+		rb, err = dialSendTCP(kps, b, cl.settings.SocksAddr())
 		if err != nil {
 			return
 		}

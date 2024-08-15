@@ -8,9 +8,9 @@ import (
 	"time"
 
 	"github.com/hashicorp/go-uuid"
-	"github.com/jcmturner/gokrb5/v8/iana/nametype"
-	"github.com/jcmturner/gokrb5/v8/keytab"
-	"github.com/jcmturner/gokrb5/v8/types"
+	"github.com/0xZDH/gokrb5/v8/iana/nametype"
+	"github.com/0xZDH/gokrb5/v8/keytab"
+	"github.com/0xZDH/gokrb5/v8/types"
 )
 
 const (
@@ -130,10 +130,8 @@ func (c *Credentials) Password() string {
 
 // HasPassword queries if the Credentials has a password defined.
 func (c *Credentials) HasPassword() bool {
-	if c.password != "" {
-		return true
-	}
-	return false
+	// Allow blank passwords
+	return true
 }
 
 // SetValidUntil sets the expiry time of the credentials

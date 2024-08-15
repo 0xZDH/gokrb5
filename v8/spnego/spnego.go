@@ -7,11 +7,11 @@ import (
 	"fmt"
 
 	"github.com/jcmturner/gofork/encoding/asn1"
-	"github.com/jcmturner/gokrb5/v8/asn1tools"
-	"github.com/jcmturner/gokrb5/v8/client"
-	"github.com/jcmturner/gokrb5/v8/gssapi"
-	"github.com/jcmturner/gokrb5/v8/keytab"
-	"github.com/jcmturner/gokrb5/v8/service"
+	"github.com/0xZDH/gokrb5/v8/asn1tools"
+	"github.com/0xZDH/gokrb5/v8/client"
+	"github.com/0xZDH/gokrb5/v8/gssapi"
+	"github.com/0xZDH/gokrb5/v8/keytab"
+	"github.com/0xZDH/gokrb5/v8/service"
 )
 
 // SPNEGO implements the GSS-API mechanism for RFC 4178

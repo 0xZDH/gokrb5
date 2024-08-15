@@ -14,12 +14,12 @@ import (
 	"os"
 
 	"github.com/jcmturner/goidentity/v6"
-	"github.com/jcmturner/gokrb5/v8/client"
-	"github.com/jcmturner/gokrb5/v8/config"
-	"github.com/jcmturner/gokrb5/v8/keytab"
-	"github.com/jcmturner/gokrb5/v8/service"
-	"github.com/jcmturner/gokrb5/v8/spnego"
-	"github.com/jcmturner/gokrb5/v8/test/testdata"
+	"github.com/0xZDH/gokrb5/v8/client"
+	"github.com/0xZDH/gokrb5/v8/config"
+	"github.com/0xZDH/gokrb5/v8/keytab"
+	"github.com/0xZDH/gokrb5/v8/service"
+	"github.com/0xZDH/gokrb5/v8/spnego"
+	"github.com/0xZDH/gokrb5/v8/test/testdata"
 )
 
 func main() {

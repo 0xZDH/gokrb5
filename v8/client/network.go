@@ -155,23 +155,24 @@ func (cl *Client) sendKDCTCP(realm string, b []byte) ([]byte, error) {
 func dialSendTCP(kdcs map[int]string, b []byte, socksAddr string) ([]byte, error) {
 	var errs []string
 	for i := 1; i <= len(kdcs); i++ {
-		var conn net.Conn
+		var conn   net.Conn
+		var netErr error
 
 		if socksAddr != "" {
 			dial, err := proxy.SOCKS5("tcp", socksAddr, nil, &net.Dialer{Timeout: 5 * time.Second})
 			if err != nil {
-				return nil, errors.New("error establishing SOCKS5 proxy")
+				return nil, fmt.Errorf("error establishing SOCKS5 proxy: %v", err)
 			}
 
-			conn, err = dial.Dial("tcp", kdcs[i])
-			if err != nil {
-				errs = append(errs, fmt.Sprintf("error dialing through SOCKS5 proxy to %s: %v", kdcs[i], err))
+			conn, netErr = dial.Dial("tcp", kdcs[i])
+			if netErr != nil {
+				errs = append(errs, fmt.Sprintf("error dialing through SOCKS5 proxy to %s: %v", kdcs[i], netErr))
 				continue
 			}
 		} else {
-			conn, err = net.DialTimeout("tcp", kdcs[i], 5*time.Second)
-			if err != nil {
-				errs = append(errs, fmt.Sprintf("error setting dial timeout on connection to %s: %v", kdcs[i], err))
+			conn, netErr = net.DialTimeout("tcp", kdcs[i], 5*time.Second)
+			if netErr != nil {
+				errs = append(errs, fmt.Sprintf("error setting dial timeout on connection to %s: %v", kdcs[i], netErr))
 				continue
 			}
 		}

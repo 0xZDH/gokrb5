@@ -58,6 +58,20 @@ func (s *Settings) AssumePreAuthentication() bool {
 	return s.assumePreAuthentication
 }
 
+// PreAuthEType used to configure the preauthentication encryption type.
+//
+// s := NewSettings(PreAuthEType(true))
+func PreAuthEType(e int32) func(*Settings) {
+	return func(s *Settings) {
+		s.preAuthEType = e
+	}
+}
+
+// PreAuthEType indicates the preautneitcation encryption type.
+func (s *Settings) PreAuthEType() int32 {
+	return s.preAuthEType
+}
+
 // SocksAddr used to configure the client to use SOCKS5 proxy.
 //
 // s := NewSettings(SocksAddr("127.0.0.1:1080"))
